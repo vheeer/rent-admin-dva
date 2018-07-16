@@ -27,6 +27,7 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
 
 const FormItem = Form.Item;
+const confirm = Modal.confirm;
 
 class VSelect extends React.Component {
   render() {
@@ -49,15 +50,26 @@ const CreateForm = Form.create({
       });
     };
 
-    const { editRecord } = props;
+    const { editRecord, __that } = props;
     const fieldsObj = {};
     // console.log("editRecord", editRecord);
-    if (!editRecord) return;
-    const keys = Object.keys(editRecord);
-    keys.forEach(key => {
-      KV(key, editRecord[key]);
-    });
-    /*** 表单值生成 ***/
+    const { type } = __that;
+    console.log("type is: ", type);
+    switch (type)
+    {
+      case 'add':
+        KV('_count', 1);
+        break;
+      case 'updateOne':
+        // 更新一条记录（添值进表单）
+        const keys = Object.keys(editRecord);
+        keys.forEach(key => {
+          KV(key, editRecord[key]);
+        });
+        break;
+      case 'updateMany':
+        break;
+    }
 
     return fieldsObj;
   },
@@ -66,13 +78,14 @@ const CreateForm = Form.create({
   },
 })(props => {
   // console.log("create 2 props", props);
-  const { modalVisible, form, handleAdd, handleModalVisible, editRecord } = props;
+  const { modalVisible, form, handleSubmit, handleModalVisible, editRecord, __that } = props;
+  const { type } = __that;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       // editRecord = {}; // 清空状态里的临时行
       form.resetFields();
-      handleAdd(fieldsValue);
+      handleSubmit(fieldsValue);
     });
   };
   return (
@@ -122,6 +135,16 @@ const CreateForm = Form.create({
           rules: [{ required: false, message: '请输入内容' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
+      {
+        type === 'add'?
+        (
+          <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="添加数量">
+            {form.getFieldDecorator('_count', {
+              rules: [{ required: true, message: '请输入数量' }],
+            })(<InputNumber min={1} max={1000} precision={0} />)}
+          </FormItem>
+        ):null
+      }
     </Modal>
   );
 });
@@ -154,7 +177,7 @@ export default class TableList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'rule/match',
       payload: { model: 'shop' },
     });
   }
@@ -163,39 +186,45 @@ export default class TableList extends PureComponent {
     const { dispatch } = this.props;
     const { formValues } = this.state;
 
-    this.setState({ pagination, filtersArg });
-
     const filters = this.parseState();
 
+    let vsorter = '';
+    if (sorter.field) {
+      const order = sorter.order.substr(0, sorter.order.length - 3);
+      vsorter = `${sorter.field} ${order}`;
+    }
+
+    this.setState({ pagination, filtersArg, _sort: vsorter });
+
     const params = {
-      _page: pagination.current,
+      _page: pagination.current, 
       _pageSize: pagination.pageSize,
+      _sort: vsorter,
       ...formValues,
       ...filters,
     };
-    if (sorter.field) {
-      const order = sorter.order.substr(0, sorter.order.length - 3);
-      params._sort = `${sorter.field} ${order}`;
-    }
+    console.log('params', params);
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'rule/match',
       payload: { model: 'shop', ...params },
     });
   };
 
   handleFormReset = () => {
     const { form, dispatch } = this.props;
-    const { pagination, formValues } = this.state;
+    const { pagination, formValues, _sort } = this.state;
 
     const filters = this.parseState();
 
     const params = {
       _page: pagination.current,
       _pageSize: pagination.pageSize,
+      _sort,
       ...formValues,
       ...filters,
     };
+    console.log('params', params);
 
     form.resetFields();
     this.setState({
@@ -203,7 +232,7 @@ export default class TableList extends PureComponent {
     });
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'rule/match',
       payload: { model: 'shop' },
     });
   };
@@ -212,6 +241,13 @@ export default class TableList extends PureComponent {
     const { expandForm } = this.state;
     this.setState({
       expandForm: !expandForm,
+    });
+  };
+
+  handleModalVisible = flag => {
+    if (!flag) this.editRecord = {};
+    this.setState({
+      modalVisible: !!flag,
     });
   };
 
@@ -239,6 +275,7 @@ export default class TableList extends PureComponent {
         break;
     }
   };
+
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
@@ -248,7 +285,11 @@ export default class TableList extends PureComponent {
   handleSearch = e => {
     e.preventDefault();
 
-    const { dispatch, form } = this.props;
+    const { dispatch, state, form } = this.props;
+    const { pagination, formValues, _sort } = this.state;
+
+    const filters = this.parseState();
+
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -262,39 +303,63 @@ export default class TableList extends PureComponent {
         formValues: values,
       });
 
+      const params = {
+        _page: pagination.current,
+        _pageSize: pagination.pageSize,
+        _sort,
+        ...formValues,
+        ...values,
+      };
+      console.log("params", params);
+
       dispatch({
         type: 'rule/match',
-        payload: { model: 'shop', ...values },
+        payload: { model: 'shop', ...params },
       });
     });
   };
 
-  handleModalVisible = flag => {
-    if (!flag) this.editRecord = {};
-    this.setState({
-      modalVisible: !!flag,
-    });
-  };
-
-  handleAdd = fields => {
-    const { dispatch } = this.props;
-    const { pagination, formValues } = this.state;
+  handleSubmit = fields => {
+    const { dispatch, state } = this.props;
+    const { pagination, formValues, _sort, selectedRows } = this.state;
+    const { type } = this;
 
     const filters = this.parseState();
 
     const params = {
       _page: pagination.current,
       _pageSize: pagination.pageSize,
+      _sort,
       ...formValues,
       ...filters,
     };
-    console.log('dispatch add');
+    console.log("params", params);
+    let action = '';
+
+    switch (type)
+    {
+      case 'add':
+        action = 'add';
+        break;
+      case 'updateOne':
+        action = 'add';
+        break;
+      case 'updateMany':
+        action = 'updatemul';
+        let _ids = '';
+        selectedRows.forEach(({ id }) => _ids += id + ',');
+        _ids = _ids.substr(0, _ids.length - 1);
+        fields._ids = _ids;
+        break;
+      default:
+        break;
+    }
     dispatch({
-      type: 'rule/add',
+      type: 'rule/' + action,
       payload: { model: 'shop', ...fields },
       callback: () => {
         dispatch({
-          type: 'rule/fetch',
+          type: 'rule/match',
           payload: { model: 'shop', ...params },
         });
       },
@@ -306,25 +371,27 @@ export default class TableList extends PureComponent {
   };
 
   handleDelete = (e, record) => {
-    console.log('record', record);
     const { dispatch } = this.props;
-    const { pagination, formValues, filtersArg } = this.state;
+    const { pagination, formValues, _sort } = this.state;
 
     const filters = this.parseState();
 
     const params = {
       _page: pagination.current,
       _pageSize: pagination.pageSize,
+      _sort,
       ...formValues,
       ...filters,
     };
+    console.log('params', params);
+
     const { id } = record;
     dispatch({
       type: 'rule/drop',
       payload: { model: 'shop', id },
       callback: () => {
         dispatch({
-          type: 'rule/fetch',
+          type: 'rule/match',
           payload: { model: 'shop', ...params },
         });
       },
@@ -332,9 +399,66 @@ export default class TableList extends PureComponent {
   };
 
   handleEdit = (e, record) => {
+    this.type = 'updateOne';
     this.editRecord = record;
     this.handleModalVisible(true);
   };
+
+  handleAddClick = e => {
+    this.type = 'add';
+    this.handleModalVisible(true);
+  }
+
+  handleUpdateMany = e => {
+    this.type = 'updateMany';
+    this.handleModalVisible(true);
+  }
+
+  handleDeleteMany = e => {
+    const { dispatch } = this.props;
+    const { selectedRows, pagination, formValues, _sort } = this.state;
+
+    const filters = this.parseState();
+
+    const params = {
+      _page: pagination.current,
+      _pageSize: pagination.pageSize,
+      _sort,
+      ...formValues,
+      ...filters,
+    };
+    console.log('params', params);
+
+    let ids = '';
+    selectedRows.forEach(({ id }) => ids += id + ',');
+    ids = ids.substr(0, ids.length - 1);
+
+    console.log("ids: ", ids);
+    const content = '您将要删除' + selectedRows.length + '个项，删除后不可恢复！';
+    confirm({
+      title: '提示',
+      content,
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk() {
+        dispatch({
+          type: 'rule/drop',
+          payload: { model: 'shop', ids },
+          callback: () => {
+            dispatch({
+              type: 'rule/match',
+              payload: { model: 'shop', ...params },
+            });
+          },
+        });
+        console.log('OK');
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    })
+  }
 
   renderSimpleForm() {
     const { form } = this.props;
@@ -445,10 +569,7 @@ export default class TableList extends PureComponent {
 
   render() {
     const _that = this;
-    const {
-      rule: { data },
-      loading,
-    } = this.props;
+    const { rule: { data }, loading } = this.props;
     const { selectedRows, modalVisible } = this.state;
 
     const columns = [
@@ -481,6 +602,8 @@ export default class TableList extends PureComponent {
             value: 1,
           },
         ],
+        filterMultiple: false,
+        
       },
       {
         title: '所在城市',
@@ -534,17 +657,11 @@ export default class TableList extends PureComponent {
       },
     ];
 
-    const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
-      </Menu>
-    );
-
     const parentMethods = {
-      handleAdd: this.handleAdd,
+      handleSubmit: this.handleSubmit,
       handleModalVisible: this.handleModalVisible,
       editRecord: this.editRecord,
+      __that: this
     };
 
     return (
@@ -553,17 +670,21 @@ export default class TableList extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <div className={styles.tableListOperator}>
-              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+              <Button icon="plus" type="primary" onClick={this.handleAddClick}>
                 新建
               </Button>
               {selectedRows.length > 0 && (
                 <span>
-                  <Button>批量操作</Button>
-                  <Dropdown overlay={menu}>
-                    <Button>
-                      更多操作 <Icon type="down" />
-                    </Button>
-                  </Dropdown>
+                  <Button onClick={this.handleUpdateMany}>批量修改</Button>
+                  <Button type="danger" onClick={this.handleDeleteMany}>批量删除</Button>
+
+                  {/*
+                    <Dropdown overlay={menu}>
+                      <Button>
+                        更多操作 <Icon type="down" />
+                      </Button>
+                    </Dropdown>
+                  */}
                 </span>
               )}
             </div>

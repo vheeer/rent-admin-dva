@@ -1,5 +1,5 @@
 import { queryRule, removeRule, addRule } from '../services/api';
-import { select, match, create, update, drop } from '../services/curd';
+import { select, match, create, createmul, updatemul, drop } from '../services/curd';
 
 export default {
   namespace: 'rule',
@@ -49,7 +49,27 @@ export default {
       });
     },
     *add({ payload, callback }, { call, put }) {
-      const response = yield call(create, payload);
+      // 添加、修改单条记录，添加多条记录
+      const { _count, ...payload_rest } = payload;
+      console.log('add payload ', payload);
+      let service;
+      if (_count === 1) {
+        service = create;
+      } else if(typeof _count === "number" && _count > 1) {
+        service = createmul;
+      } else if(typeof _count === "undefined") {
+        service = create;
+      }
+      const response = yield call(service, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
+      if (callback) callback();
+    },
+    *updatemul({ payload, callback }, { call, put }) {
+      console.log('add payload ', payload);
+      const response = yield call(updatemul, payload);
       yield put({
         type: 'save',
         payload: response,
@@ -57,6 +77,7 @@ export default {
       if (callback) callback();
     },
     *drop({ payload, callback }, { call, put }) {
+      console.log("payload drop", payload)
       const response = yield call(drop, payload);
       yield put({
         type: 'save',

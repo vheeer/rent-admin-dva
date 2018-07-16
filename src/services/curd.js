@@ -75,11 +75,30 @@ export function create({ model, ...params }) {
 }
 
 /**
+ * create request
+ * params { values, model }
+ * @return {Promise} []
+ */
+export function createmul({ model, ...params }) {
+  const params_str = objToParams(params);
+
+  let url = config.host + '/' + model + '/createmul';
+
+  return request(url, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+    },
+    body: params_str,
+  });
+}
+
+/**
  * update request
  * params { values, model }
  * @return {Promise} []
  */
-export function update({ model, ...params }) {
+export function updatemul({ model, ...params }) {
   const params_str = objToParams(params);
 
   let url = config.host + '/' + model + '/update';
@@ -98,8 +117,8 @@ export function update({ model, ...params }) {
  * params { values, model }
  * @return {Promise} []
  */
-export function drop({ model, id }) {
-  const params_str = objToParams({ id });
+export function drop({ model, ...params }) {
+  const params_str = objToParams(params);
 
   let url = config.host + '/' + model + '/delete';
 
