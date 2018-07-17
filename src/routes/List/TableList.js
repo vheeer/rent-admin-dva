@@ -80,6 +80,21 @@ const CreateForm = Form.create({
   // console.log("create 2 props", props);
   const { modalVisible, form, handleSubmit, handleModalVisible, editRecord, __that } = props;
   const { type } = __that;
+
+  let modalTitle = '';
+  switch (type)
+  {
+    case 'add':
+      modalTitle = '添加记录';
+      break;
+    case 'updateOne':
+      modalTitle = '修改信息';
+      break;
+    case 'updateMany':
+      modalTitle = '修改多条记录';
+      break;
+  }
+
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -90,7 +105,7 @@ const CreateForm = Form.create({
   };
   return (
     <Modal
-      title="新建规则"
+      title={modalTitle}
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
@@ -185,6 +200,7 @@ export default class TableList extends PureComponent {
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
+    this.state.filtersArg = filtersArg;
 
     const filters = this.parseState();
 
@@ -195,6 +211,8 @@ export default class TableList extends PureComponent {
     }
 
     this.setState({ pagination, filtersArg, _sort: vsorter });
+
+    console.log('filters', filters);
 
     const params = {
       _page: pagination.current, 
@@ -288,9 +306,6 @@ export default class TableList extends PureComponent {
     const { dispatch, state, form } = this.props;
     const { pagination, formValues, _sort } = this.state;
 
-    const filters = this.parseState();
-
-
     form.validateFields((err, fieldsValue) => {
       if (err) return;
 
@@ -311,6 +326,7 @@ export default class TableList extends PureComponent {
         ...values,
       };
       console.log("params", params);
+      console.log("params.add_time.valueOf()", params.add_time.valueOf());
 
       dispatch({
         type: 'rule/match',
@@ -460,6 +476,10 @@ export default class TableList extends PureComponent {
     })
   }
 
+  handleDateChange = (a,b,c) => {
+    console.log(a,b,c);
+  }
+
   renderSimpleForm() {
     const { form } = this.props;
     const { getFieldDecorator } = form;
@@ -540,7 +560,7 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="添加日期">
               {getFieldDecorator('add_time')(
-                <DatePicker style={{ width: '100%' }} placeholder="请输入添加日期" />
+                <DatePicker onChange={this.handleDateChange} style={{ width: '100%' }} placeholder="请输入添加日期" />
               )}
             </FormItem>
           </Col>
