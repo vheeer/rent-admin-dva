@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react';
+﻿import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import {
@@ -43,7 +43,7 @@ const getValue = obj =>
 
 const CreateForm = Form.create({
   mapPropsToFields(props) {
-    // 填值函数
+    // 填值函数_
     const KV = (key, value) => {
       fieldsObj[key] = Form.createFormField({
         value,
