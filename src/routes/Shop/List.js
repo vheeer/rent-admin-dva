@@ -24,10 +24,12 @@ import {
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
-import styles from './TableList.less';
+import styles from '../List.less';
 
 const FormItem = Form.Item;
 const confirm = Modal.confirm;
+
+const namespace = 'shop';
 
 class VSelect extends React.Component {
   render() {
@@ -164,10 +166,12 @@ const CreateForm = Form.create({
   );
 });
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
-}))
+@connect((x) => { 
+  const obj = {};
+  obj[namespace] = x[namespace];
+  obj['loading'] = x.loading.models[namespace];
+  return obj;
+})
 @Form.create()
 export default class TableList extends PureComponent {
   state = {
@@ -192,8 +196,8 @@ export default class TableList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/match',
-      payload: { model: 'shop' },
+      type: namespace + '/match',
+      payload: { model: namespace },
     });
   }
 
@@ -224,8 +228,8 @@ export default class TableList extends PureComponent {
     console.log('params', params);
 
     dispatch({
-      type: 'rule/match',
-      payload: { model: 'shop', ...params },
+      type: namespace + '/match',
+      payload: { model: namespace, ...params },
     });
   };
 
@@ -250,8 +254,8 @@ export default class TableList extends PureComponent {
     });
 
     dispatch({
-      type: 'rule/match',
-      payload: { model: 'shop' },
+      type: namespace + '/match',
+      payload: { model: namespace },
     });
   };
 
@@ -278,7 +282,7 @@ export default class TableList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: namespace + '/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -326,11 +330,10 @@ export default class TableList extends PureComponent {
         ...values,
       };
       console.log("params", params);
-      console.log("params.add_time.valueOf()", params.add_time.valueOf());
 
       dispatch({
-        type: 'rule/match',
-        payload: { model: 'shop', ...params },
+        type: namespace + '/match',
+        payload: { model: namespace, ...params },
       });
     });
   };
@@ -371,12 +374,12 @@ export default class TableList extends PureComponent {
         break;
     }
     dispatch({
-      type: 'rule/' + action,
-      payload: { model: 'shop', ...fields },
+      type: namespace + '/' + action,
+      payload: { model: namespace, ...fields },
       callback: () => {
         dispatch({
-          type: 'rule/match',
-          payload: { model: 'shop', ...params },
+          type: namespace + '/match',
+          payload: { model: namespace, ...params },
         });
       },
     });
@@ -403,12 +406,12 @@ export default class TableList extends PureComponent {
 
     const { id } = record;
     dispatch({
-      type: 'rule/drop',
-      payload: { model: 'shop', id },
+      type: namespace + '/drop',
+      payload: { model: namespace, id },
       callback: () => {
         dispatch({
-          type: 'rule/match',
-          payload: { model: 'shop', ...params },
+          type: namespace + '/match',
+          payload: { model: namespace, ...params },
         });
       },
     });
@@ -445,11 +448,11 @@ export default class TableList extends PureComponent {
     };
     console.log('params', params);
 
-    let ids = '';
-    selectedRows.forEach(({ id }) => ids += id + ',');
-    ids = ids.substr(0, ids.length - 1);
+    let _ids = '';
+    selectedRows.forEach(({ id }) => _ids += id + ',');
+    _ids = _ids.substr(0, _ids.length - 1);
 
-    console.log("ids: ", ids);
+    console.log("_ids: ", _ids);
     const content = '您将要删除' + selectedRows.length + '个项，删除后不可恢复！';
     confirm({
       title: '提示',
@@ -459,12 +462,12 @@ export default class TableList extends PureComponent {
       cancelText: '取消',
       onOk() {
         dispatch({
-          type: 'rule/drop',
-          payload: { model: 'shop', ids },
+          type: namespace + '/drop',
+          payload: { model: namespace, _ids },
           callback: () => {
             dispatch({
-              type: 'rule/match',
-              payload: { model: 'shop', ...params },
+              type: namespace + '/match',
+              payload: { model: namespace, ...params },
             });
           },
         });
@@ -589,7 +592,9 @@ export default class TableList extends PureComponent {
 
   render() {
     const _that = this;
-    const { rule: { data }, loading } = this.props;
+    const { loading } = this.props;
+    const { data } = this.props[namespace];
+
     const { selectedRows, modalVisible } = this.state;
 
     const columns = [

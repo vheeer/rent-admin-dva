@@ -2,7 +2,7 @@ import { queryRule, removeRule, addRule } from '../services/api';
 import { select, match, create, createmul, updatemul, drop } from '../services/curd';
 
 export default {
-  namespace: 'rule',
+  namespace: 'custom',
 
   state: {
     data: {

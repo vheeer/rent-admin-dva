@@ -9,17 +9,7 @@ const menuData = [
       {
         name: '分析页',
         path: 'analysis',
-      },
-      {
-        name: '监控页',
-        path: 'monitor',
-      },
-      {
-        name: '工作台',
-        path: 'workplace',
-        // hideInBreadcrumb: true,
-        // hideInMenu: true,
-      },
+      }
     ],
   },
   {
@@ -30,54 +20,76 @@ const menuData = [
       {
         name: '基础表单',
         path: 'basic-form',
-      },
+      }
+    ],
+  },
+  {
+    name: '商品管理',
+    icon: 'table',
+    path: 'goods',
+    children: [
       {
-        name: '分步表单',
-        path: 'step-form',
-      },
+        name: '商品列表',
+        path: 'list',
+      }
+    ],
+  },
+  {
+    name: '订单管理',
+    icon: 'table',
+    path: 'order',
+    children: [
       {
-        name: '高级表单',
-        authority: 'admin',
-        path: 'advanced-form',
+        name: '订单列表',
+        path: 'order',
+      }
+    ],
+  },
+  {
+    name: '商户管理',
+    icon: 'table',
+    path: 'shop',
+    children: [
+      {
+        name: '商户列表',
+        path: 'list',
       },
     ],
   },
   {
-    name: '列表页',
+    name: '用户管理',
     icon: 'table',
-    path: 'list',
+    path: 'custom',
     children: [
       {
-        name: '查询表格',
-        path: 'table-list',
-      },
-      {
-        name: '标准列表',
-        path: 'basic-list',
-      },
-      {
-        name: '卡片列表',
-        path: 'card-list',
-      },
-      {
-        name: '搜索列表',
-        path: 'search',
-        children: [
-          {
-            name: '搜索列表（文章）',
-            path: 'articles',
-          },
-          {
-            name: '搜索列表（项目）',
-            path: 'projects',
-          },
-          {
-            name: '搜索列表（应用）',
-            path: 'applications',
-          },
-        ],
-      },
+        name: '用户列表',
+        path: 'list',
+      }
     ],
+  },
+  {
+    name: '账户中心',
+    icon: 'table',
+    path: 'account',
+    children: [
+      {
+        name: '账号列表',
+        path: 'list',
+      },
+      {
+        name: '角色管理',
+        path: 'role',
+      },
+      {
+        name: '权限管理',
+        path: 'permission',
+      }
+    ],
+  },
+  {
+    name: '店铺运营',
+    icon: 'table',
+    path: 'runtime',
   },
   {
     name: '详情页',
@@ -87,12 +99,7 @@ const menuData = [
       {
         name: '基础详情页',
         path: 'basic',
-      },
-      {
-        name: '高级详情页',
-        path: 'advanced',
-        authority: 'admin',
-      },
+      }
     ],
   },
   {
