@@ -1,4 +1,4 @@
-﻿import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import {
@@ -29,7 +29,7 @@ import styles from '../List.less';
 const FormItem = Form.Item;
 const confirm = Modal.confirm;
 
-const namespace = 'shop';
+const namespace = 'account';
 
 class VSelect extends React.Component {
   render() {
@@ -112,44 +112,29 @@ const CreateForm = Form.create({
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="店铺ID">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="账号ID">
         {form.getFieldDecorator('id', {
           rules: [{ required: false }],
         })(<Input disabled placeholder="新建后自动生成" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="店铺编号">
-        {form.getFieldDecorator('shop_sn', {
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="账号编号">
+        {form.getFieldDecorator('account_sn', {
           rules: [{ required: false, message: '请输入编号' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="店铺名称">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="账户名">
         {form.getFieldDecorator('name', {
           rules: [{ required: false, message: '请输入名称' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="设备描述">
-        {form.getFieldDecorator('equipment_desc', {
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
+        {form.getFieldDecorator('role_id', {
           rules: [{ required: false, message: '请输入描述' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="是否营业">
-        {form.getFieldDecorator('is_open', {
-          rules: [{ required: false, message: '请输入内容' }],
-        })(
-          <VSelect placeholder="请选择" style={{ width: '100%' }}>
-            <Option value={0}>未开业</Option>
-            <Option value={1}>运营中</Option>
-          </VSelect>
-        )}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="所在城市">
-        {form.getFieldDecorator('city', {
-          rules: [{ required: false, message: '请输入内容' }],
-        })(<Input placeholder="请输入" />)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="地理位置">
-        {form.getFieldDecorator('position', {
-          rules: [{ required: false, message: '请输入内容' }],
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="所属店铺">
+        {form.getFieldDecorator('shop_id', {
+          rules: [{ required: false, message: '请输入描述' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
       {
@@ -490,18 +475,13 @@ export default class TableList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="店铺编号">
-              {getFieldDecorator('shop_sn')(<Input placeholder="请输入" />)}
+            <FormItem label="账户编号">
+              {getFieldDecorator('account_sn')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="是否营业">
-              {getFieldDecorator('is_open')(
-                <VSelect placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value={0}>未开业</Option>
-                  <Option value={1}>运营中</Option>
-                </VSelect>
-              )}
+            <FormItem label="账户名">
+              {getFieldDecorator('name')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
@@ -529,33 +509,23 @@ export default class TableList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="店铺编号">
-              {getFieldDecorator('shop_sn')(<Input placeholder="请输入" />)}
+            <FormItem label="账户编号">
+              {getFieldDecorator('account_sn')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="是否营业">
-              {getFieldDecorator('is_open')(
-                <VSelect placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value={0}>未开业</Option>
-                  <Option value={1}>运营中</Option>
-                </VSelect>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="店铺名称">
+            <FormItem label="账户名">
               {getFieldDecorator('name')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="设备描述">
-              {getFieldDecorator('equipment_desc')(<Input placeholder="请输入" />)}
+            <FormItem label="店铺ID">
+              {getFieldDecorator('shop_id')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="所在城市">
-              {getFieldDecorator('city')(<InputNumber style={{ width: '100%' }} />)}
+            <FormItem label="角色ID">
+              {getFieldDecorator('role_id')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
         </Row>
@@ -603,57 +573,20 @@ export default class TableList extends PureComponent {
         dataIndex: 'id',
       },
       {
-        title: '店铺编号',
-        dataIndex: 'shop_sn',
+        title: '账户编号',
+        dataIndex: 'account_sn',
       },
       {
-        title: '店铺名称',
+        title: '账户名',
         dataIndex: 'name',
       },
       {
-        title: '设备描述',
-        dataIndex: 'equipment_desc',
+        title: '角色ID',
+        dataIndex: 'role_id',
       },
       {
-        title: '是否营业',
-        dataIndex: 'is_open',
-        filters: [
-          {
-            text: '未开业',
-            value: 0,
-          },
-          {
-            text: '营业中',
-            value: 1,
-          },
-        ],
-        filterMultiple: false,
-        
-      },
-      {
-        title: '所在城市',
-        dataIndex: 'city',
-      },
-      {
-        title: '地理位置',
-        dataIndex: 'position',
-        width: 100,
-        sort: true,
-        render: (val, record) => {
-          const length = val.length;
-          const breif = val.substr(0, 6);
-          const title = (
-            <Fragment>
-              <b>{record.name}</b>的地理位置
-            </Fragment>
-          );
-          return (
-            <Popover content={val} title={title} trigger="hover">
-              {breif}
-              {length > 6 ? '...' : null}
-            </Popover>
-          );
-        },
+        title: '商户ID',
+        dataIndex: 'shop_id',
       },
       {
         title: '添加时间',

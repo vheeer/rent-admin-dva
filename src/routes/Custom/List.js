@@ -57,6 +57,7 @@ const CreateForm = Form.create({
     // console.log("editRecord", editRecord);
     const { type } = __that;
     console.log("type is: ", type);
+    KV('referee', 0);
     switch (type)
     {
       case 'add':
@@ -79,7 +80,6 @@ const CreateForm = Form.create({
     console.log(values);
   },
 })(props => {
-  // console.log("create 2 props", props);
   const { modalVisible, form, handleSubmit, handleModalVisible, editRecord, __that } = props;
   const { type } = __that;
 
@@ -113,6 +113,54 @@ const CreateForm = Form.create({
       onCancel={() => handleModalVisible()}
     >
       
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="用户ID">
+        {form.getFieldDecorator('id', {
+          rules: [{ required: false }],
+        })(<Input disabled placeholder="新建后自动生成" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="昵称">
+        {form.getFieldDecorator('nickname', {
+          rules: [{ required: false, message: '请输入编号' }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
+        {form.getFieldDecorator('real_name', {
+          rules: [{ required: false, message: '请输入编号' }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="性别">
+        {form.getFieldDecorator('gender', {
+          rules: [{ required: false, message: '请输入编号' }],
+        })(<VSelect placeholder="请选择" style={{ width: '100%' }}>
+            <Option value={1}>男</Option>
+            <Option value={2}>女</Option>
+          </VSelect>)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="手机">
+        {form.getFieldDecorator('mobile', {
+          rules: [{ required: false, message: '请输入编号' }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="余额">
+        {form.getFieldDecorator('balance', {
+          rules: [{ required: false, message: '请输入编号' }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="押金">
+        {form.getFieldDecorator('deposit', {
+          rules: [{ required: false, message: '请输入编号' }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="所在城市">
+        {form.getFieldDecorator('city', {
+          rules: [{ required: false, message: '请输入编号' }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="推荐人">
+        {form.getFieldDecorator('referee', {
+          rules: [{ required: false, message: '请输入编号' }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
       {
         type === 'add'?
         (
@@ -451,6 +499,11 @@ export default class TableList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
+            <FormItem label="昵称">
+              {getFieldDecorator('nickname')(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
             <FormItem label="手机">
               {getFieldDecorator('mobile')(<Input placeholder="请输入" />)}
             </FormItem>
@@ -480,8 +533,50 @@ export default class TableList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
+            <FormItem label="昵称">
+              {getFieldDecorator('nickname')(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
             <FormItem label="手机">
               {getFieldDecorator('mobile')(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="姓名">
+              {getFieldDecorator('real_name')(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="性别">
+              {getFieldDecorator('gender')(<VSelect placeholder="请选择" style={{ width: '100%' }}>
+                <Option value={1}>男</Option>
+                <Option value={2}>女</Option>
+              </VSelect>)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="余额">
+              {getFieldDecorator('balance')(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="押金">
+              {getFieldDecorator('deposit')(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="所在城市 ">
+              {getFieldDecorator('city')(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={8} sm={24}>
+            <FormItem label="添加日期">
+              {getFieldDecorator('add_time')(
+                <DatePicker onChange={this.handleDateChange} style={{ width: '100%' }} placeholder="请输入添加日期" />
+              )}
             </FormItem>
           </Col>
         </Row>
@@ -538,14 +633,20 @@ export default class TableList extends PureComponent {
       {
         title: '余额',
         dataIndex: 'balance',
+        needTotal: true
       },
       {
         title: '押金',
         dataIndex: 'deposit',
+        needTotal: true
       },
       {
         title: '所在城市',
         dataIndex: 'city',
+      },
+      {
+        title: '推荐人',
+        dataIndex: 'referee',
       },
       {
         title: '添加时间',
@@ -582,7 +683,7 @@ export default class TableList extends PureComponent {
     };
 
     return (
-      <PageHeaderLayout title="查询表格">
+      <PageHeaderLayout>
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>

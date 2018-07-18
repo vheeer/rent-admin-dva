@@ -80,11 +80,26 @@ export const getRouterData = app => {
     '/form/basic-form': {
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/BasicForm')),
     },
+    '/goods/list': {
+      component: dynamicWrapper(app, ['goods'], () => import('../routes/Goods/List')),
+    },
+    '/order/list': {
+      component: dynamicWrapper(app, ['order'], () => import('../routes/Order/List')),
+    },
     '/shop/list': {
       component: dynamicWrapper(app, ['shop'], () => import('../routes/Shop/List')),
     },
     '/custom/list': {
       component: dynamicWrapper(app, ['custom'], () => import('../routes/Custom/List')),
+    },
+    '/account/list': {
+      component: dynamicWrapper(app, ['account'], () => import('../routes/Account/List')),
+    },
+    '/account/role': {
+      component: dynamicWrapper(app, ['role'], () => import('../routes/Account/Role')),
+    },
+    '/account/rolepermission': {
+      component: dynamicWrapper(app, ['rolepermission'], () => import('../routes/Account/Rolepermission')),
     },
     '/profile/basic': {
       component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/BasicProfile')),

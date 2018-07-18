@@ -41,7 +41,7 @@ const menuData = [
     children: [
       {
         name: '订单列表',
-        path: 'order',
+        path: 'list',
       }
     ],
   },
@@ -82,7 +82,7 @@ const menuData = [
       },
       {
         name: '权限管理',
-        path: 'permission',
+        path: 'rolepermission',
       }
     ],
   },
