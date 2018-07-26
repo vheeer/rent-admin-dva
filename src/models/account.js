@@ -33,6 +33,8 @@ export default {
     *match({ payload }, { call, put }) {
       console.log(payload);
       const result = yield call(match, payload);
+      if (!result)
+        return;
       // 处理传回数据
       const pagination = {
         total: result.data.count,
@@ -84,7 +86,7 @@ export default {
         payload: response,
       });
       if (callback) callback();
-    },
+    }
   },
 
   reducers: {

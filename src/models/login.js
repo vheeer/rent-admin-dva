@@ -1,6 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
-import { fakeAccountLogin } from '../services/api';
+import { login } from '../services/user';
 import { setAuthority } from '../utils/authority';
 import { reloadAuthorized } from '../utils/Authorized';
 import { getPageQuery } from '../utils/utils';
@@ -14,30 +14,33 @@ export default {
 
   effects: {
     *login({ payload }, { call, put }) {
-      const response = yield call(fakeAccountLogin, payload);
+      console.log('payload----------------', payload);
+      const response = yield call(login, payload);
+      console.log('response', response);
+      const { data } = response;
       yield put({
         type: 'changeLoginStatus',
-        payload: response,
+        payload: data,
       });
       // Login successfully
-      if (response.status === 'ok') {
+      if (data.status === 'ok') {
         reloadAuthorized();
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
-        if (redirect) {
-          const redirectUrlParams = new URL(redirect);
-          if (redirectUrlParams.origin === urlParams.origin) {
-            redirect = redirect.substr(urlParams.origin.length);
-            if (redirect.startsWith('/#')) {
-              redirect = redirect.substr(2);
-            }
-          } else {
-            window.location.href = redirect;
-            return;
-          }
-        }
-        yield put(routerRedux.replace(redirect || '/'));
+        // if (redirect) {
+          // const redirectUrlParams  = new URL(redirect);
+          // if (redirectUrlParams.origin === urlParams.origin) {
+            // redirect = redirect.substr(urlParams.origin.length);
+            // if (redirect.startsWith('/#')) {
+              // redirect = redirect.substr(2);
+            // }
+          // } else {
+            // window.location.href = redirect;
+            // return;
+          // }
+        // }
+        yield put(routerRedux.replace('/'));
       }
     },
     *logout(_, { put }) {

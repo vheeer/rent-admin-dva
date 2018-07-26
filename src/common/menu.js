@@ -31,6 +31,7 @@ const menuData = [
       {
         name: '商品列表',
         path: 'list',
+        authority: 'admin',
       }
     ],
   },
@@ -42,6 +43,7 @@ const menuData = [
       {
         name: '订单列表',
         path: 'list',
+        authority: 'admin',
       }
     ],
   },
@@ -53,6 +55,7 @@ const menuData = [
       {
         name: '商户列表',
         path: 'list',
+        authority: [ 'guest', 'admin' ],
       },
     ],
   },
@@ -64,6 +67,7 @@ const menuData = [
       {
         name: '用户列表',
         path: 'list',
+        authority: 'admin',
       }
     ],
   },
@@ -75,14 +79,17 @@ const menuData = [
       {
         name: '账号列表',
         path: 'list',
+        authority: 'admin',
       },
       {
         name: '角色管理',
         path: 'role',
+        authority: 'admin',
       },
       {
         name: '权限管理',
         path: 'rolepermission',
+        authority: 'admin',
       }
     ],
   },
@@ -99,6 +106,7 @@ const menuData = [
       {
         name: '基础详情页',
         path: 'basic',
+        authority: 'admin',
       }
     ],
   },

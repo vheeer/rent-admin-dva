@@ -9,7 +9,7 @@ const codeMessage = {
   202: '一个请求已经进入后台排队（异步任务）。',
   204: '删除数据成功。',
   400: '发出的请求有错误，服务器没有进行新建或修改数据的操作。',
-  401: '用户没有权限（令牌、用户名、密码错误）。',
+  401: '请登录',
   403: '用户得到授权，但是访问是被禁止的。',
   404: '发出的请求针对的是不存在的记录，服务器没有进行操作。',
   406: '请求的格式不可得。',
@@ -25,10 +25,16 @@ function checkStatus(response) {
     return response;
   }
   const errortext = codeMessage[response.status] || response.statusText;
-  notification.error({
+  const notificationContent = {
     message: `请求错误 ${response.status}: ${response.url}`,
     description: errortext,
-  });
+  }
+  notification.warning(notificationContent);
+
+  if (response.status === 401) {
+    
+  }
+
   const error = new Error(errortext);
   error.name = response.status;
   error.response = response;
@@ -54,15 +60,12 @@ export default function request(url, options) {
   ) {
     if (!(newOptions.body instanceof FormData)) {
       newOptions.headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json; charset=utf-8',
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
         ...newOptions.headers,
       };
-      newOptions.body = JSON.stringify(newOptions.body);
     } else {
       // newOptions.body is FormData
       newOptions.headers = {
-        Accept: 'application/json',
         ...newOptions.headers,
       };
     }
@@ -74,7 +77,7 @@ export default function request(url, options) {
       if (newOptions.method === 'DELETE' || response.status === 204) {
         return response.text();
       }
-      return response.json();
+      return response.json().then(data => ({ ...data }));
     })
     .catch(e => {
       const { dispatch } = store;

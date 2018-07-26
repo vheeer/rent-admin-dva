@@ -117,8 +117,13 @@ const CreateForm = Form.create({
           rules: [{ required: false }],
         })(<Input disabled placeholder="新建后自动生成" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色名">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色名（英文）">
         {form.getFieldDecorator('name', {
+          rules: [{ required: false, message: '请输入名称' }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色名（中文）">
+        {form.getFieldDecorator('name_cn', {
           rules: [{ required: false, message: '请输入名称' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
@@ -460,8 +465,13 @@ export default class TableList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="角色名">
+            <FormItem label="角色名（英文）">
               {getFieldDecorator('name')(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="角色名（中文）">
+              {getFieldDecorator('name_cn')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
@@ -489,8 +499,13 @@ export default class TableList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="角色名">
+            <FormItem label="角色名（英文）">
               {getFieldDecorator('name')(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="角色名（中文）">
+              {getFieldDecorator('name_cn')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
         </Row>
@@ -538,8 +553,12 @@ export default class TableList extends PureComponent {
         dataIndex: 'id',
       },
       {
-        title: '角色名',
+        title: '角色名（英文）',
         dataIndex: 'name',
+      },
+      {
+        title: '角色名（中文）',
+        dataIndex: 'name_cn',
       },
       {
         title: '添加时间',

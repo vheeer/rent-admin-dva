@@ -580,9 +580,17 @@ export default class TableList extends PureComponent {
         title: '账户名',
         dataIndex: 'name',
       },
+      // {
+      //   title: '角色ID',
+      //   dataIndex: 'role_id',
+      // },
       {
-        title: '角色ID',
-        dataIndex: 'role_id',
+        title: '角色（英文）',
+        dataIndex: 'role_name',
+      },
+      {
+        title: '角色（中文）',
+        dataIndex: 'role_name_cn',
       },
       {
         title: '商户ID',

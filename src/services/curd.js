@@ -33,12 +33,7 @@ export function match({ model, ...params }) {
 
   let url = config.host + '/' + model + '/match?' + params_str;
 
-  return request(url, {
-    method: 'get',
-    headers: {
-      withCredentials: true,
-    },
-  });
+  return request(url);
 }
 /**
  * readColumn request

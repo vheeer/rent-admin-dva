@@ -180,3 +180,14 @@ const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(
 export function isUrl(path) {
   return reg.test(path);
 }
+
+export function objToParams(obj) {
+  let str = "";
+  for(let key in obj)
+  {
+    if(obj[key] !== undefined)
+      str += key + "=" + obj[key] + "&";
+  }
+  str = str.substr(0, str.length - 1);
+  return str;
+}

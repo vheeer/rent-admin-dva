@@ -25,6 +25,5 @@ export default {
     javascriptEnabled: true,
   },
   disableDynamicImport: true,
-  publicPath: '/',
-  hash: true,
+  hash: false,
 };

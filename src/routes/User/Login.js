@@ -22,7 +22,7 @@ export default class LoginPage extends Component {
   };
 
   handleSubmit = (err, values) => {
-    const { type } = this.state;
+    const { type, autoLogin } = this.state;
     const { dispatch } = this.props;
     if (!err) {
       dispatch({
@@ -30,6 +30,7 @@ export default class LoginPage extends Component {
         payload: {
           ...values,
           type,
+          autoLogin
         },
       });
     }
