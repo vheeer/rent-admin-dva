@@ -16,3 +16,15 @@ export async function login(params) {
     body: objToParams(params)
   });
 }
+export async function logout(params) {
+  return request(config.host + '/account/logout', {
+    method: 'POST',
+    body: objToParams(params)
+  });
+}
+export async function register(params) {
+  return request(config.host + '/account/register', {
+    method: 'POST',
+    body: objToParams(params)
+  });
+}

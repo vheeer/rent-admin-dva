@@ -55,7 +55,7 @@ const menuData = [
       {
         name: '商户列表',
         path: 'list',
-        authority: [ 'guest', 'admin' ],
+        authority: 'admin',
       },
     ],
   },

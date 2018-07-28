@@ -24,16 +24,19 @@ function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
+  // 提示异常
   const errortext = codeMessage[response.status] || response.statusText;
-  const notificationContent = {
-    message: `请求错误 ${response.status}: ${response.url}`,
-    description: errortext,
-  }
-  notification.warning(notificationContent);
-
   if (response.status === 401) {
-    
+    const notificationContent = {
+      message: `请求错误 ${response.status}: ${response.url}`,
+      description: errortext,
+    }
+    notification.info(notificationContent);
+  } else {
+
   }
+
+  
 
   const error = new Error(errortext);
   error.name = response.status;

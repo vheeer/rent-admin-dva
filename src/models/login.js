@@ -1,6 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
-import { login } from '../services/user';
+import { login, logout } from '../services/user';
 import { setAuthority } from '../utils/authority';
 import { reloadAuthorized } from '../utils/Authorized';
 import { getPageQuery } from '../utils/utils';
@@ -28,22 +28,27 @@ export default {
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
-        // if (redirect) {
-          // const redirectUrlParams  = new URL(redirect);
-          // if (redirectUrlParams.origin === urlParams.origin) {
-            // redirect = redirect.substr(urlParams.origin.length);
-            // if (redirect.startsWith('/#')) {
-              // redirect = redirect.substr(2);
-            // }
-          // } else {
-            // window.location.href = redirect;
-            // return;
-          // }
-        // }
-        yield put(routerRedux.replace('/'));
+        if (redirect) {
+          const redirectUrlParams = new URL(redirect);
+          // 如果参数中有login字符，登录后跳到首页
+          if (redirectUrlParams.hash.indexOf('login') > -1) {
+            window.location.href = '/';
+            return;
+          }
+          if (redirectUrlParams.origin === urlParams.origin) {
+            redirect = redirect.substr(urlParams.origin.length);
+            if (redirect.startsWith('/#')) {
+              redirect = redirect.substr(2);
+            }
+          } else {
+            window.location.href = redirect;
+            return;
+          }
+        }
+        yield put(routerRedux.replace(redirect || '/'));
       }
     },
-    *logout(_, { put }) {
+    *logout(_, { call, put }) {
       yield put({
         type: 'changeLoginStatus',
         payload: {
@@ -60,6 +65,8 @@ export default {
           }),
         })
       );
+      const response = yield call(logout);
+      console.log('退出结果', response);
     },
   },
 
@@ -72,5 +79,11 @@ export default {
         type: payload.type,
       };
     },
+    setState(state, { payload }) {
+      return {
+        ...state,
+        ...payload
+      }
+    }
   },
 };

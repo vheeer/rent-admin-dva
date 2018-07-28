@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux, Link } from 'dva/router';
-import { Form, Input, Button, Select, Row, Col, Popover, Progress } from 'antd';
+import { Form, Input, Button, Select, Row, Col, Popover, Progress, Alert } from 'antd';
 import styles from './Register.less';
 
 const FormItem = Form.Item;
@@ -84,7 +84,7 @@ export default class Register extends Component {
       const { prefix } = this.state;
       if (!err) {
         dispatch({
-          type: 'register/submit',
+          type: 'register/register',
           payload: {
             ...values,
             prefix,
@@ -161,14 +161,22 @@ export default class Register extends Component {
     ) : null;
   };
 
+  renderMessage = content => {
+    return <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />;
+  };
+
   render() {
-    const { form, submitting } = this.props;
+    const { form, submitting, register } = this.props;
     const { getFieldDecorator } = form;
     const { count, prefix, help, visible } = this.state;
     return (
       <div className={styles.main}>
         <h3>注册</h3>
         <Form onSubmit={this.handleSubmit}>
+        {
+          register.status === 'dup' 
+          && this.renderMessage('该用户名已被注册')
+        }
           <FormItem>
             {getFieldDecorator('mail', {
               rules: [
@@ -220,6 +228,7 @@ export default class Register extends Component {
               ],
             })(<Input size="large" type="password" placeholder="确认密码" />)}
           </FormItem>
+          {/*
           <FormItem>
             <InputGroup compact>
               <Select
@@ -245,6 +254,7 @@ export default class Register extends Component {
               })(<Input size="large" style={{ width: '80%' }} placeholder="11位手机号" />)}
             </InputGroup>
           </FormItem>
+
           <FormItem>
             <Row gutter={8}>
               <Col span={16}>
@@ -269,6 +279,7 @@ export default class Register extends Component {
               </Col>
             </Row>
           </FormItem>
+            */}
           <FormItem>
             <Button
               size="large"
