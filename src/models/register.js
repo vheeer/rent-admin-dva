@@ -60,6 +60,7 @@ export default {
     setup({ dispatch, history }) {
       const listener = location => {
         if (location.pathname === '/user/register-result') {
+          alert(3);
           dispatch({
             type: 'clearStatus'
           })
