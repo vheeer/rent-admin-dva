@@ -568,49 +568,49 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="电话">
               {form.getFieldDecorator('mobile', {
-                rules: [{ required: false, message: '请输入编号' }],
+                rules: [{ required: false, message: '请输入电话' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="开始时间">
               {form.getFieldDecorator('start_time', {
-                rules: [{ required: false, message: '请输入编号' }],
+                rules: [{ required: false, message: '请输入开始时间' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="结束时间">
               {form.getFieldDecorator('end_time', {
-                rules: [{ required: false, message: '请输入编号' }],
+                rules: [{ required: false, message: '请输入结束时间' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="订单价格">
               {form.getFieldDecorator('order_price', {
-                rules: [{ required: false, message: '请输入编号' }],
+                rules: [{ required: false, message: '请输入订单价格' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="实际价格">
               {form.getFieldDecorator('actual_price', {
-                rules: [{ required: false, message: '请输入编号' }],
+                rules: [{ required: false, message: '请输入实际价格' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="单价">
               {form.getFieldDecorator('unit_price', {
-                rules: [{ required: false, message: '请输入编号' }],
+                rules: [{ required: false, message: '请输入单价' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="单位">
               {form.getFieldDecorator('unit', {
-                rules: [{ required: false, message: '请输入编号' }],
+                rules: [{ required: false, message: '请输入单位' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
@@ -696,10 +696,12 @@ export default class TableList extends PureComponent {
       {
         title: '开始时间',
         dataIndex: 'start_time',
+        render: val => <span>{moment(val * 1000).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },
       {
         title: '结束时间',
         dataIndex: 'end_time',
+        render: val => val === 0?null:<span>{moment(val * 1000).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },
       {
         title: '订单价格',

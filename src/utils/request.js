@@ -26,18 +26,19 @@ function checkStatus(response) {
   }
   // 提示异常
   const errortext = codeMessage[response.status] || response.statusText;
+  let notificationContent;
   if (response.status === 401) {
-    const notificationContent = {
+    notificationContent = {
+      message: `请登录`
+    }
+  } else {
+    notificationContent = {
       message: `请求错误 ${response.status}: ${response.url}`,
       description: errortext,
     }
-    notification.info(notificationContent);
-  } else {
-
   }
-
+  notification.info(notificationContent);
   
-
   const error = new Error(errortext);
   error.name = response.status;
   error.response = response;
@@ -86,9 +87,8 @@ export default function request(url, options) {
       const { dispatch } = store;
       const status = e.name;
       if (status === 401) {
-        dispatch({
-          type: 'login/logout',
-        });
+        console.log('..........')
+        dispatch(routerRedux.push('/user/login'));
         return;
       }
       if (status === 403) {

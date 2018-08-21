@@ -122,6 +122,21 @@ const CreateForm = Form.create({
           rules: [{ required: false, message: '请输入编号' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="商户ID">
+        {form.getFieldDecorator('shop_id', {
+          rules: [{ required: false, message: '请输入ID' }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="价格">
+        {form.getFieldDecorator('price', {
+          rules: [{ required: false, message: '请输入价格' }],
+        })(<InputNumber style={{ width: '100%' }} />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="单位">
+        {form.getFieldDecorator('unit', {
+          rules: [{ required: false, message: '请输入单位' }],
+        })(<Input style={{ width: '100%' }} />)}
+      </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="是否在售">
         {form.getFieldDecorator('is_on_sale', {
           rules: [{ required: false, message: '请输入名称' }],
@@ -520,6 +535,21 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
+            <FormItem label="商户ID">
+              {getFieldDecorator('shop_id')(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="价格">
+              {getFieldDecorator('price')(<InputNumber style={{ width: '100%' }} />)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="单位">
+              {getFieldDecorator('unit')(<Input style={{ width: '100%' }} />)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
             <FormItem label="是否在售">
               {getFieldDecorator('is_on_sale')(<VSelect placeholder="请选择" style={{ width: '100%' }}>
                   <Option value={1}>是</Option>
@@ -536,13 +566,8 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="商户ID">
-              {getFieldDecorator('shop_id')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
             <FormItem label="二维码">
-              {getFieldDecorator('code_img_url')(<InputNumber style={{ width: '100%' }} />)}
+              {getFieldDecorator('code_img_url')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
         </Row>
@@ -596,6 +621,14 @@ export default class TableList extends PureComponent {
       {
         title: '商户ID',
         dataIndex: 'shop_id',
+      },
+      {
+        title: '价格',
+        dataIndex: 'price',
+      },
+      {
+        title: '单位',
+        dataIndex: 'unit',
       },
       {
         title: '是否在售',

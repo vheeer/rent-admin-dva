@@ -49,6 +49,7 @@ export default {
       }
     },
     *logout(_, { call, put }) {
+      alert('models/login  logout 退出')
       yield put({
         type: 'changeLoginStatus',
         payload: {
