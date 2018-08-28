@@ -83,8 +83,8 @@ export const getRouterData = app => {
     '/goods/list': {
       component: dynamicWrapper(app, ['goods'], () => import('../routes/Goods/List')),
     },
-    '/order/list': {
-      component: dynamicWrapper(app, ['order'], () => import('../routes/Order/List')),
+    '/target/list': {
+      component: dynamicWrapper(app, ['target'], () => import('../routes/Target/List')),
     },
     '/shop/list': {
       component: dynamicWrapper(app, ['shop'], () => import('../routes/Shop/List')),
@@ -99,7 +99,9 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['role'], () => import('../routes/Account/Role')),
     },
     '/account/rolepermission': {
-      component: dynamicWrapper(app, ['rolepermission'], () => import('../routes/Account/Rolepermission')),
+      component: dynamicWrapper(app, ['rolepermission'], () =>
+        import('../routes/Account/Rolepermission')
+      ),
     },
     '/profile/basic': {
       component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/BasicProfile')),

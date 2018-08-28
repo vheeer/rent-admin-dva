@@ -23,13 +23,14 @@ import {
 } from 'antd';
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
+import Vpop from 'components/Pop';
 
 import styles from '../List.less';
 
 const FormItem = Form.Item;
 const confirm = Modal.confirm;
 
-const namespace = 'order';
+const namespace = 'target';
 
 class VSelect extends React.Component {
   render() {
@@ -56,9 +57,8 @@ const CreateForm = Form.create({
     const fieldsObj = {};
     // console.log("editRecord", editRecord);
     const { type } = __that;
-    console.log("type is: ", type);
-    switch (type)
-    {
+    console.log('type is: ', type);
+    switch (type) {
       case 'add':
         KV('_count', 1);
         break;
@@ -84,8 +84,7 @@ const CreateForm = Form.create({
   const { type } = __that;
 
   let modalTitle = '';
-  switch (type)
-  {
+  switch (type) {
     case 'add':
       modalTitle = '添加记录';
       break;
@@ -112,81 +111,63 @@ const CreateForm = Form.create({
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="订单ID">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="公司名称">
         {form.getFieldDecorator('id', {
           rules: [{ required: false }],
         })(<Input disabled placeholder="新建后自动生成" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="订单编号">
-        {form.getFieldDecorator('order_sn', {
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="法定代表人">
+        {form.getFieldDecorator('leader', {
           rules: [{ required: false, message: '请输入编号' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="用户ID">
-        {form.getFieldDecorator('user_id', {
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="联系电话">
+        {form.getFieldDecorator('contact', {
           rules: [{ required: false, message: '请输入编号' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="订单状态">
-        {form.getFieldDecorator('order_status', {
-          rules: [{ required: false, message: '请输入名称' }],
-        })(<VSelect placeholder="请选择" style={{ width: '100%' }}>
-            <Option value={0}>未使用</Option>
-            <Option value={1}>申请使用</Option>
-            <Option value={2}>正在使用</Option>
-            <Option value={3}>申请结束</Option>
-          </VSelect>)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="电话">
-        {form.getFieldDecorator('mobile', {
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="地址">
+        {form.getFieldDecorator('address', {
           rules: [{ required: false, message: '请输入编号' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="开始时间">
-        {form.getFieldDecorator('start_time', {
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="经营范围">
+        {form.getFieldDecorator('scope', {
           rules: [{ required: false, message: '请输入编号' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="结束时间">
-        {form.getFieldDecorator('end_time', {
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="注册资本">
+        {form.getFieldDecorator('capital', {
           rules: [{ required: false, message: '请输入编号' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="订单价格">
-        {form.getFieldDecorator('order_price', {
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="邮箱">
+        {form.getFieldDecorator('mail', {
           rules: [{ required: false, message: '请输入编号' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="实际价格">
-        {form.getFieldDecorator('actual_price', {
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="企业网址">
+        {form.getFieldDecorator('website', {
           rules: [{ required: false, message: '请输入编号' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="单价">
-        {form.getFieldDecorator('unit_price', {
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="备注">
+        {form.getFieldDecorator('remarks', {
           rules: [{ required: false, message: '请输入编号' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="单位">
-        {form.getFieldDecorator('unit', {
-          rules: [{ required: false, message: '请输入编号' }],
-        })(<Input placeholder="请输入" />)}
-      </FormItem>
-      {
-        type === 'add'?
-        (
-          <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="添加数量">
-            {form.getFieldDecorator('_count', {
-              rules: [{ required: true, message: '请输入数量' }],
-            })(<InputNumber min={1} max={1000} precision={0} />)}
-          </FormItem>
-        ):null
-      }
+      {type === 'add' ? (
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="添加数量">
+          {form.getFieldDecorator('_count', {
+            rules: [{ required: true, message: '请输入数量' }],
+          })(<InputNumber min={1} max={1000} precision={0} />)}
+        </FormItem>
+      ) : null}
     </Modal>
   );
 });
 
-@connect((x) => {
+@connect(x => {
   const obj = {};
   obj[namespace] = x[namespace];
   obj['loading'] = x.loading.models[namespace];
@@ -239,7 +220,7 @@ export default class TableList extends PureComponent {
     console.log('filters', filters);
 
     const params = {
-      _page: pagination.current, 
+      _page: pagination.current,
       _pageSize: pagination.pageSize,
       _sort: vsorter,
       ...formValues,
@@ -349,7 +330,7 @@ export default class TableList extends PureComponent {
         ...formValues,
         ...values,
       };
-      console.log("params", params);
+      console.log('params', params);
 
       dispatch({
         type: namespace + '/match',
@@ -372,11 +353,10 @@ export default class TableList extends PureComponent {
       ...formValues,
       ...filters,
     };
-    console.log("params", params);
+    console.log('params', params);
     let action = '';
 
-    switch (type)
-    {
+    switch (type) {
       case 'add':
         action = 'add';
         break;
@@ -386,7 +366,7 @@ export default class TableList extends PureComponent {
       case 'updateMany':
         action = 'updatemul';
         let _ids = '';
-        selectedRows.forEach(({ id }) => _ids += id + ',');
+        selectedRows.forEach(({ id }) => (_ids += id + ','));
         _ids = _ids.substr(0, _ids.length - 1);
         fields._ids = _ids;
         break;
@@ -446,12 +426,12 @@ export default class TableList extends PureComponent {
   handleAddClick = e => {
     this.type = 'add';
     this.handleModalVisible(true);
-  }
+  };
 
   handleUpdateMany = e => {
     this.type = 'updateMany';
     this.handleModalVisible(true);
-  }
+  };
 
   handleDeleteMany = e => {
     const { dispatch } = this.props;
@@ -469,10 +449,10 @@ export default class TableList extends PureComponent {
     console.log('params', params);
 
     let _ids = '';
-    selectedRows.forEach(({ id }) => _ids += id + ',');
+    selectedRows.forEach(({ id }) => (_ids += id + ','));
     _ids = _ids.substr(0, _ids.length - 1);
 
-    console.log("_ids: ", _ids);
+    console.log('_ids: ', _ids);
     const content = '您将要删除' + selectedRows.length + '个项，删除后不可恢复！';
     confirm({
       title: '提示',
@@ -496,12 +476,12 @@ export default class TableList extends PureComponent {
       onCancel() {
         console.log('Cancel');
       },
-    })
-  }
+    });
+  };
 
-  handleDateChange = (a,b,c) => {
-    console.log(a,b,c);
-  }
+  handleDateChange = (a, b, c) => {
+    console.log(a, b, c);
+  };
 
   renderSimpleForm() {
     const { form } = this.props;
@@ -557,14 +537,16 @@ export default class TableList extends PureComponent {
             <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="订单状态">
               {form.getFieldDecorator('order_status', {
                 rules: [{ required: false, message: '请输入名称' }],
-              })(<VSelect placeholder="请选择" style={{ width: '100%' }}>
+              })(
+                <VSelect placeholder="请选择" style={{ width: '100%' }}>
                   <Option value={0}>未使用</Option>
                   <Option value={1}>申请使用</Option>
                   <Option value={2}>正在使用</Option>
                   <Option value={3}>申请结束</Option>
-                </VSelect>)}
+                </VSelect>
+              )}
             </FormItem>
-            </Col>
+          </Col>
           <Col md={8} sm={24}>
             <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="电话">
               {form.getFieldDecorator('mobile', {
@@ -619,7 +601,11 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="添加日期">
               {getFieldDecorator('add_time')(
-                <DatePicker onChange={this.handleDateChange} style={{ width: '100%' }} placeholder="请输入添加日期" />
+                <DatePicker
+                  onChange={this.handleDateChange}
+                  style={{ width: '100%' }}
+                  placeholder="请输入添加日期"
+                />
               )}
             </FormItem>
           </Col>
@@ -657,75 +643,72 @@ export default class TableList extends PureComponent {
       {
         title: 'ID',
         dataIndex: 'id',
+        width: 55,
       },
       {
-        title: '订单编号',
-        dataIndex: 'goods_sn',
+        title: '公司名称',
+        dataIndex: 'name',
+        render: (val, record) => {
+          return <Vpop val={val} record={record} max={9} />;
+        },
+        width: 180,
       },
       {
-        title: '用户ID',
-        dataIndex: 'shop_id',
+        title: '法定代表人',
+        dataIndex: 'leader',
+        width: 110,
       },
       {
-        title: '订单状态',
-        dataIndex: 'order_status',
-        filters: [
-          {
-            text: '未使用',
-            value: 0,
-          },
-          {
-            text: '申请使用',
-            value: 1,
-          },
-          {
-            text: '正在使用',
-            value: 2,
-          },
-          {
-            text: '申请结束',
-            value: 3,
-          },
-        ],
-        filterMultiple: false,
+        title: '联系电话',
+        dataIndex: 'contact',
+        render: (val, record) => {
+          return <Vpop val={val} record={record} max={15} />;
+        },
+        width: 150,
       },
       {
-        title: '手机',
-        dataIndex: 'mobile',
+        title: '地址',
+        dataIndex: 'address',
+        render: (val, record) => {
+          return <Vpop val={val} record={record} max={6} />;
+        },
+        width: 130,
       },
       {
-        title: '开始时间',
-        dataIndex: 'start_time',
-        render: val => <span>{moment(val * 1000).format('YYYY-MM-DD HH:mm:ss')}</span>,
+        title: '成立日期',
+        dataIndex: 'create_time',
+        // render: val => <span>{moment(val * 1000).format('YYYY-MM-DD HH:mm:ss')}</span>,
+        width: 140,
       },
       {
-        title: '结束时间',
-        dataIndex: 'end_time',
-        render: val => val === 0?null:<span>{moment(val * 1000).format('YYYY-MM-DD HH:mm:ss')}</span>,
+        title: '经营范围',
+        dataIndex: 'scope',
+        render: (val, record) => {
+          return <Vpop val={val} record={record} max={3} />;
+        },
+        width: 88,
       },
       {
-        title: '订单价格',
-        dataIndex: 'order_price',
-        needTotal: true
+        title: '注册资本',
+        dataIndex: 'capital',
+        width: 88,
       },
       {
-        title: '实际价格',
-        dataIndex: 'actual_price',
-        needTotal: true
+        title: '邮箱',
+        dataIndex: 'mail',
+        width: 200,
       },
       {
-        title: '单价',
-        dataIndex: 'unit_price',
+        title: '企业网址',
+        dataIndex: 'website',
+        width: 250,
       },
       {
-        title: '单位',
-        dataIndex: 'unit',
-      },
-      {
-        title: '添加时间',
-        dataIndex: 'add_time',
-        sorter: true,
-        render: val => <span>{moment(val * 1000).format('YYYY-MM-DD HH:mm:ss')}</span>,
+        title: '备注',
+        dataIndex: 'remarks',
+        render: (val, record) => {
+          return <Vpop val={val} record={record} max={6} />;
+        },
       },
       {
         title: '操作',
@@ -752,7 +735,7 @@ export default class TableList extends PureComponent {
       handleSubmit: this.handleSubmit,
       handleModalVisible: this.handleModalVisible,
       editRecord: this.editRecord,
-      __that: this
+      __that: this,
     };
 
     return (
@@ -767,7 +750,9 @@ export default class TableList extends PureComponent {
               {selectedRows.length > 0 && (
                 <span>
                   <Button onClick={this.handleUpdateMany}>批量修改</Button>
-                  <Button type="danger" onClick={this.handleDeleteMany}>批量删除</Button>
+                  <Button type="danger" onClick={this.handleDeleteMany}>
+                    批量删除
+                  </Button>
 
                   {/*
                     <Dropdown overlay={menu}>
@@ -786,6 +771,7 @@ export default class TableList extends PureComponent {
               columns={columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
+              scroll={{ x: 1600 }}
             />
           </div>
         </Card>

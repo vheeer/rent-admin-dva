@@ -9,7 +9,7 @@ const menuData = [
       {
         name: '分析页',
         path: 'analysis',
-      }
+      },
     ],
   },
   {
@@ -20,7 +20,7 @@ const menuData = [
       {
         name: '基础表单',
         path: 'basic-form',
-      }
+      },
     ],
   },
   {
@@ -32,19 +32,19 @@ const menuData = [
         name: '商品列表',
         path: 'list',
         authority: 'admin',
-      }
+      },
     ],
   },
   {
     name: '订单管理',
     icon: 'table',
-    path: 'order',
+    path: 'target',
     children: [
       {
         name: '订单列表',
         path: 'list',
         authority: 'admin',
-      }
+      },
     ],
   },
   {
@@ -68,7 +68,7 @@ const menuData = [
         name: '用户列表',
         path: 'list',
         authority: 'admin',
-      }
+      },
     ],
   },
   {
@@ -90,7 +90,7 @@ const menuData = [
         name: '权限管理',
         path: 'rolepermission',
         authority: 'admin',
-      }
+      },
     ],
   },
   {
@@ -107,7 +107,7 @@ const menuData = [
         name: '基础详情页',
         path: 'basic',
         authority: 'admin',
-      }
+      },
     ],
   },
   {

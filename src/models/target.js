@@ -2,7 +2,7 @@ import { queryRule, removeRule, addRule } from '../services/api';
 import { select, match, create, createmul, updatemul, drop } from '../services/curd';
 
 export default {
-  namespace: 'order',
+  namespace: 'target',
 
   state: {
     data: {
@@ -15,8 +15,7 @@ export default {
     *fetch({ payload }, { call, put }) {
       console.log(payload);
       const result = yield call(select, payload);
-      if (!result)
-        return;
+      if (!result) return;
       // 处理传回数据
       const pagination = {
         total: result.data.count,
@@ -35,8 +34,7 @@ export default {
     *match({ payload }, { call, put }) {
       console.log(payload);
       const result = yield call(match, payload);
-      if (!result)
-        return;
+      if (!result) return;
       // 处理传回数据
       const pagination = {
         total: result.data.count,
@@ -59,9 +57,9 @@ export default {
       let service;
       if (_count === 1) {
         service = create;
-      } else if(typeof _count === "number" && _count > 1) {
+      } else if (typeof _count === 'number' && _count > 1) {
         service = createmul;
-      } else if(typeof _count === "undefined") {
+      } else if (typeof _count === 'undefined') {
         service = create;
       }
       const response = yield call(service, payload);
@@ -81,7 +79,7 @@ export default {
       if (callback) callback();
     },
     *drop({ payload, callback }, { call, put }) {
-      console.log("payload drop", payload)
+      console.log('payload drop', payload);
       const response = yield call(drop, payload);
       yield put({
         type: 'save',
