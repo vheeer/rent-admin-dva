@@ -1,4 +1,4 @@
-import { queryRule, removeRule, addRule } from '../services/api';
+import { queryRule, removeRule, addRule, execute } from '../services/api';
 import { select, match, create, createmul, updatemul, drop } from '../services/curd';
 
 export default {
@@ -81,6 +81,16 @@ export default {
     *drop({ payload, callback }, { call, put }) {
       console.log('payload drop', payload);
       const response = yield call(drop, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
+      if (callback) callback();
+    },
+    *execute({ payload, callback }, { call, put }) {
+      console.log('add payload ', payload);
+      const response = yield call(execute, payload);
+      console.log('execute res', response)
       yield put({
         type: 'save',
         payload: response,

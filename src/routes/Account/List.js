@@ -132,6 +132,11 @@ const CreateForm = Form.create({
           rules: [{ required: false, message: '请输入描述' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="绑定的微信用户ID">
+        {form.getFieldDecorator('custom_id', {
+          rules: [{ required: false, message: '请输入描述' }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="所属店铺">
         {form.getFieldDecorator('shop_id', {
           rules: [{ required: false, message: '请输入描述' }],
@@ -524,6 +529,11 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
+            <FormItem label="绑定的微信用户ID">
+              {getFieldDecorator('custom_id')(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
             <FormItem label="角色ID">
               {getFieldDecorator('role_id')(<Input placeholder="请输入" />)}
             </FormItem>
@@ -595,6 +605,18 @@ export default class TableList extends PureComponent {
       {
         title: '商户ID',
         dataIndex: 'shop_id',
+      },
+      {
+        title: '绑定的微信用户ID',
+        dataIndex: 'custom_id',
+      },
+      {
+        title: '绑定的微信用户昵称',
+        dataIndex: 'custom_nickname',
+      },
+      {
+        title: '当前需要拨打的号码',
+        dataIndex: 'custom_excute',
       },
       {
         title: '添加时间',

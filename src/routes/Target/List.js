@@ -141,6 +141,20 @@ const CreateForm = Form.create({
           rules: [{ required: false, message: '请输入编号' }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="是否营业">
+        {form.getFieldDecorator('status', {
+          rules: [{ required: false, message: '请输入内容' }],
+        })(
+          <VSelect placeholder="请选择" style={{ width: '100%' }}>
+            <Option value={0}>未联系</Option>
+            <Option value={1}>无意向</Option>
+            <Option value={2}>微信申请中</Option>
+            <Option value={3}>微信已添加</Option>
+            <Option value={4}>已经约见</Option>
+            <Option value={5}>已经签约</Option>
+          </VSelect>
+        )}
+      </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="邮箱">
         {form.getFieldDecorator('mail', {
           rules: [{ required: false, message: '请输入编号' }],
@@ -535,14 +549,16 @@ export default class TableList extends PureComponent {
           </Col>
           <Col md={8} sm={24}>
             <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="订单状态">
-              {form.getFieldDecorator('order_status', {
+              {form.getFieldDecorator('status', {
                 rules: [{ required: false, message: '请输入名称' }],
               })(
                 <VSelect placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value={0}>未使用</Option>
-                  <Option value={1}>申请使用</Option>
-                  <Option value={2}>正在使用</Option>
-                  <Option value={3}>申请结束</Option>
+                  <Option value={0}>未联系</Option>
+                  <Option value={1}>无意向</Option>
+                  <Option value={2}>微信申请中</Option>
+                  <Option value={3}>微信已添加</Option>
+                  <Option value={4}>已经约见</Option>
+                  <Option value={5}>已经签约</Option>
                 </VSelect>
               )}
             </FormItem>
@@ -632,6 +648,20 @@ export default class TableList extends PureComponent {
     return expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
   }
 
+  go = (e, record) => {
+    // console.log('e.target', e.target)
+    // console.log('record', record)
+
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'custom/execute',
+      payload: {
+        model: 'custom',
+        execute: record.contact
+      }
+    })
+  }
+
   render() {
     const _that = this;
     const { loading } = this.props;
@@ -649,20 +679,20 @@ export default class TableList extends PureComponent {
         title: '公司名称',
         dataIndex: 'name',
         render: (val, record) => {
-          return <Vpop val={val} record={record} max={9} />;
+          return <Vpop val={val} record={record} max={7} />;
         },
-        width: 180,
+        width: 240,
       },
       {
         title: '法定代表人',
         dataIndex: 'leader',
-        width: 110,
+        width: 150,
       },
       {
         title: '联系电话',
         dataIndex: 'contact',
         render: (val, record) => {
-          return <Vpop val={val} record={record} max={15} />;
+          return <Vpop val={val} record={record} max={8} />;
         },
         width: 150,
       },
@@ -672,21 +702,21 @@ export default class TableList extends PureComponent {
         render: (val, record) => {
           return <Vpop val={val} record={record} max={6} />;
         },
-        width: 130,
+        width: 178,
       },
       {
         title: '成立日期',
         dataIndex: 'create_time',
         // render: val => <span>{moment(val * 1000).format('YYYY-MM-DD HH:mm:ss')}</span>,
-        width: 140,
+        width: 170,
       },
       {
         title: '经营范围',
         dataIndex: 'scope',
         render: (val, record) => {
-          return <Vpop val={val} record={record} max={3} />;
+          return <Vpop val={val} record={record} max={4} />;
         },
-        width: 88,
+        width: 150,
       },
       {
         title: '注册资本',
@@ -696,24 +726,108 @@ export default class TableList extends PureComponent {
       {
         title: '邮箱',
         dataIndex: 'mail',
+        render: (val, record) => {
+          return <Vpop val={val} record={record} max={8} />;
+        },
         width: 200,
       },
       {
         title: '企业网址',
         dataIndex: 'website',
-        width: 250,
+        render: (val, record) => {
+          return <Vpop val={val} record={record} max={8} />;
+        },
+        width: 200,
+      },
+      {
+        title: '状态',
+        dataIndex: 'status',
+        filters: [
+          {
+            text: '未联系',
+            value: 0,
+          },
+          {
+            text: '无意向',
+            value: 1,
+          },
+          {
+            text: '微信申请中',
+            value: 2,
+          },
+          {
+            text: '微信已添加',
+            value: 3,
+          },
+          {
+            text: '已经约见',
+            value: 4,
+          },
+          {
+            text: '已经签约',
+            value: 5,
+          }
+        ],
+        filterMultiple: false,
+        render: (val) => {
+          const filters = [
+            {
+              text: '未联系',
+              value: 0,
+            },
+            {
+              text: '无意向',
+              value: 1,
+            },
+            {
+              text: '微信申请中',
+              value: 2,
+            },
+            {
+              text: '微信已添加',
+              value: 3,
+            },
+            {
+              text: '已经约见',
+              value: 4,
+            },
+            {
+              text: '已经签约',
+              value: 5,
+            }
+          ]
+          let text = '';
+          Object.keys(filters).forEach(key => {
+            if (filters[key]['value'] === val) {
+              text = filters[key]['text']
+            }
+          })
+          return text;
+        },
+        width: 150
       },
       {
         title: '备注',
         dataIndex: 'remarks',
         render: (val, record) => {
-          return <Vpop val={val} record={record} max={6} />;
+          return <Vpop val={val} record={record} max={6} />
         },
+        width: 150
       },
       {
         title: '操作',
         render: record => (
           <Fragment>
+            <Button size="small" type="primary" onClick={
+              function(record) {
+                return function(e) {
+                  _that.go(e, record);
+                }
+              }(record)
+            }>
+              拨号
+            </Button>
+            <Divider type="vertical" />
             <a href="javascript:(0)" onClick={(record => e => _that.handleEdit(e, record))(record)}>
               编辑
             </a>
@@ -728,6 +842,7 @@ export default class TableList extends PureComponent {
             </Popconfirm>
           </Fragment>
         ),
+        width: 250
       },
     ];
 

@@ -1,5 +1,7 @@
 import { stringify } from 'qs';
 import request from '../utils/request';
+import { objToParams } from '../utils/mini_utils';
+import config from '../config';
 
 export async function queryProjectNotice() {
   return request('/api/project/notice');
@@ -31,6 +33,14 @@ export async function addRule(params) {
       method: 'post',
     },
   });
+}
+
+export function execute({ model, ...params }) {
+  const params_str = objToParams(params);
+
+  let url = config.host + '/' + model + '/execute?' + params_str;
+
+  return request(url);
 }
 
 export async function fakeSubmitForm(params) {

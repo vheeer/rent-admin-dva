@@ -628,7 +628,6 @@ export default class TableList extends PureComponent {
           },
         ],
         filterMultiple: false,
-        
       },
       {
         title: '所在城市',
